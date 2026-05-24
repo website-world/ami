@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ami.dzikr.tv"
+    android:versionCode="2"
+    android:versionName="1.0.1">
+
+    <!-- TV Support - WAJIB -->
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="true" />
+    
+    <!-- Nonaktifkan touchscreen -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    
+    <!-- Nonaktifkan hardware keyboard -->
+    <uses-feature
+        android:name="android.hardware.keyboard"
+        android:required="false" />
+    
+    <!-- TV tidak perlu telepon -->
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    
+    <!-- Permission -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    
+    <!-- Izin untuk TV -->
+    <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA" />
+    <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Dzikr AMI"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Leanback"
+        android:banner="@drawable/tv_banner"
+        android:logo="@drawable/ic_launcher"
+        android:isGame="false"
+        android:resizeableActivity="false">
+        
+        <!-- TV Launcher Activity -->
+        <activity
+            android:name=".MainActivity"
+            android:label="Dzikr Al Ma'tsurat"
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
+            
+            <!-- Intent Filter untuk TV Launcher -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                
+                <!-- WAJIB: Leanback Launcher -->
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                
+                <!-- Launcher biasa (fallback) -->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+            <!-- TV Input Service -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            
+        </activity>
+        
+        <!-- Recommendation Service untuk TV -->
+        <service
+            android:name=".RecommendationService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        
+        <!-- Boot Receiver untuk auto-start -->
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        
+    </application>
+</manifest>
