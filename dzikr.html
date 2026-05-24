@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <title>AMIqu</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="tv-styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap');
+
+        :root {
+            --primary: #736b23;
+            --secondary: #9ade24;
+            --accent: #f5de3e;
+            --light: #ecf0f1;
+            --dark: #0d0a06;
+            --text: #333;
+            --text-light: #777;
+            --arabic-size: 1.8rem;
+            --latin-size: 1.4rem;
+            --trans-size: 1.2rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            overflow-x: hidden;
+        }
+
+        img {
+            -webkit-user-drag: none;
+            user-drag: none;
+        }
+
+        header {
+            background-color: white;
+            color: var(--text);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to   { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes growIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes typing {
+            from { max-width: 0; }
+            to   { max-width: 100%; }
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        .typing-text {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid var(--text);
+            animation: typing 2s steps(30) forwards, blink 0.8s infinite;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            animation: slideInLeft 0.5s ease-out;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .back-btn:focus {
+            outline: 4px solid var(--secondary);
+            outline-offset: 4px;
+            background: rgba(154, 222, 36, 0.1);
+        }
+
+        .settings-btn {
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text);
+            animation: growIn 0.5s ease-out;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .settings-btn:focus {
+            outline: 4px solid var(--secondary);
+            outline-offset: 4px;
+            background: rgba(154, 222, 36, 0.1);
+        }
+
+        main {
+            margin-top: 80px;
+            padding: 2rem 5%;
+            min-height: calc(100vh - 80px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--text);
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .arabic {
+            font-family: 'Scheherazade New', serif;
+            font-size: var(--arabic-size);
+            line-height: 2.2;
+            direction: rtl;
+            text-align: right;
+            margin: 1.2rem 0;
+            word-spacing: 0.2rem;
+            color: var(--dark);
+        }
+
+        .latin {
+            font-style: italic;
+            font-size: var(--latin-size);
+            margin: 1rem 0;
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        .translation {
+            font-size: var(--trans-size);
+            margin: 1.2rem 0;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        .dzikir-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dzikir-section:active {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .dzikir-section:focus {
+            outline: 4px solid var(--secondary);
+            outline-offset: 4px;
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(154, 222, 36, 0.3);
+        }
+
+        .dzikir-section h2 {
+            color: var(--secondary);
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 3rem 1.5rem 0 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 70%;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+
+        .modal-content.swiping {
+            transition: none;
+        }
+
+        .modal-content.closing {
+            transform: translateY(100%) translateY(50px);
+            opacity: 0;
+        }
+
+        .modal-content h2 {
+            font-size: 1.5rem;
+            margin: -1rem 0 1.5rem 0;
+        }
+
+        .modal .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .modal .form-group label {
+            display: block;
+            font-weight: bold;
+            color: var(--text);
+            margin-bottom: .5rem;
+        }
+
+        .modal .form-group span {
+            display: block;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .modal .submit-btn {
+            background: transparent;
+            color: var(--text);
+            padding: 1.5rem 2rem;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .modal .submit-btn:active {
+            background: var(--light);
+        }
+
+        .modal .submit-btn:focus {
+            outline: 4px solid var(--secondary);
+            outline-offset: 4px;
+            background: rgba(154, 222, 36, 0.1);
+        }
+
+        .modal input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 10px;
+            background: var(--light);
+            border-radius: 10px;
+            outline: none;
+            margin: .5rem 0;
+        }
+
+        .modal input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 22px;
+            width: 22px;
+            border-radius: 50%;
+            background: var(--secondary);
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal input[type="range"]:focus::-webkit-slider-thumb {
+            outline: 4px solid var(--secondary);
+            outline-offset: 4px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--light);
+            width: 100%;
+            margin: 0;
+        }
+
+        /* TV Optimizations */
+        @media (min-width: 1920px) {
+            body { font-size: 1.4rem; }
+            .dzikir-section { padding: 35px; margin-bottom: 35px; }
+            .dzikir-section h2 { font-size: 2rem; }
+            .modal-content { max-width: 600px; }
+            .modal .submit-btn { font-size: 1.4rem; padding: 2rem; }
+        }
+
+        @media (max-width: 768px) {
+            .settings-btn { font-size: 1.8rem; }
+            .container { padding: 0 3%; }
+        }
+    </style>
+    <script>
+        // TV Detection
+        (function() {
+            const isTV = (
+                navigator.userAgent.toLowerCase().includes('tv') ||
+                new URLSearchParams(window.location.search).get('tv') === 'true' ||
+                localStorage.getItem('tvMode') === 'true'
+            );
+            if (isTV) {
+                document.documentElement.classList.add('tv-mode');
+                localStorage.setItem('tvMode', 'true');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="back-btn" tabindex="0" aria-label="Kembali ke halaman utama">
+            <span class="material-icons" style="font-size:2.2rem;">arrow_back</span>
+        </a>
+        <span style="font-weight:bold; font-size:1.2rem; position:absolute; left:50%; transform:translateX(-50%);">
+            <span class="typing-text">Dzikr dan Doa Ba'da Shalat</span>
+        </span>
+        <span class="material-icons settings-btn" id="menuBtn" tabindex="0" aria-label="Pengaturan">settings</span>
+    </header>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h2>Pengaturan Ukuran Teks</h2>
+            <div class="form-group">
+                <label for="arabicRange">Teks Arab</label>
+                <input type="range" id="arabicRange" min="10" max="40" step="1" tabindex="0">
+                <span id="arabicValue" style="display:block; margin-top:8px; font-weight:bold;">1.8rem</span>
+            </div>
+            <div class="form-group">
+                <label for="latinRange">Latin</label>
+                <input type="range" id="latinRange" min="8" max="30" step="1" tabindex="0">
+                <span id="latinValue" style="display:block; margin-top:8px; font-weight:bold;">1.4rem</span>
+            </div>
+            <div class="form-group">
+                <label for="transRange">Terjemahan</label>
+                <input type="range" id="transRange" min="8" max="30" step="1" tabindex="0">
+                <span id="transValue" style="display:block; margin-top:8px; font-weight:bold;">1.2rem</span>
+            </div>
+            <button class="submit-btn" id="saveSettingsBtn" tabindex="0">Simpan</button>
+        </div>
+    </div>
+
+    <main>
+        <div class="container">
+            <div id="dzikrBadaSection">
+                <div class="dzikir-section" tabindex="0"><h2>3× Istighfar</h2><p class="arabic">أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ، الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ، وَأَتُوبُ إِلَيْهِ</p><p class="latin">Astaghfirullaahal 'azhiim, alladzii laa ilaaha illaa huwal hayyul qayyuum, wa atuubu ilaiih</p><p class="translation">Aku memohon ampun kepada Allah Yang Maha Agung, yang tiada Tuhan selain Dia, Yang Maha Hidup lagi Berdiri Sendiri, dan aku bertaubat kepada-Nya.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>3× Tahlil</h2><p class="arabic">لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</p><p class="latin">Laa ilaaha illallaahu wahdahu laa syariikalah, lahul mulku walahul hamdu, wa huwa 'alaa kulli syai-in qadiir</p><p class="translation">Tiada Tuhan selain Allah semata, tiada sekutu bagi-Nya. Bagi-Nya segala kerajaan dan bagi-Nya segala puji, dan Dia Maha Kuasa atas segala sesuatu.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>1× Doa Salam</h2><p class="arabic">اللَّهُمَّ أَنْتَ السَّلَامُ، وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ</p><p class="latin">Allaahumma antas salaam, wa minkas salaam, tabaarakta yaa dzal jalaali wal ikraam</p><p class="translation">Ya Allah, Engkaulah sumber keselamatan, dan dari-Mu lah keselamatan. Maha Suci Engkau wahai Pemilik Keagungan dan Kemuliaan.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>1× Doa Perlindungan</h2><p class="arabic">اللَّهُمَّ لَا مَانِعَ لِمَا أَعْطَيْتَ، وَلَا مُعْطِيَ لِمَا مَنَعْتَ، وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ</p><p class="latin">Allaahumma laa maani'a limaa a'thaita, wa laa mu'thiya limaa mana'ta, wa laa yanfa'u dzal jaddi minkal jaddu</p><p class="translation">Ya Allah, tiada yang dapat menghalangi apa yang Engkau berikan, dan tiada yang dapat memberi apa yang Engkau halangi. Tidaklah bermanfaat kekayaan dan kemuliaan dari pemiliknya, hanya dari-Mu lah segala kekayaan dan kemuliaan.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>33× Tasbih</h2><p class="arabic">سُبْحَانَ اللَّهِ</p><p class="latin">Subhaanallaah</p><p class="translation">Maha Suci Allah.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>33× Tahmid</h2><p class="arabic">الْحَمْدُ لِلَّهِ</p><p class="latin">Alhamdulillaah</p><p class="translation">Segala puji bagi Allah.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>33× Takbir</h2><p class="arabic">اللَّهُ أَكْبَرُ</p><p class="latin">Allaahu Akbar</p><p class="translation">Allah Maha Besar.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>1× Tahlil Penutup</h2><p class="arabic">لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ الْعَلِيِّ الْعَظِيمِ</p><p class="latin">Laa ilaaha illallaahu wahdahu laa syariikalah, lahul mulku walahul hamdu, wa huwa 'alaa kulli syai-in qadiir. Wa laa hawla wa laa quwwata illaa billaahil 'aliyyil 'azhiim</p><p class="translation">Tiada Tuhan selain Allah semata, tiada sekutu bagi-Nya. Bagi-Nya segala kerajaan dan bagi-Nya segala puji, dan Dia Maha Kuasa atas segala sesuatu. Tiada daya dan upaya kecuali dengan pertolongan Allah Yang Maha Tinggi lagi Maha Agung.</p></div>
+            </div>
+
+            <div id="doaSection">
+                <div class="dzikir-section" tabindex="0"><h2>Doa Pembuka</h2><p class="arabic">أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ، بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ، الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ، حَمْدًا يُوَافِقُ نِعَمَهُ وَيُكَافِئُ مَزِيدَهُ، يَا رَبَّنَا لَكَ الْحَمْدُ، وَلَكَ الشُّكْرُ، كَمَا يَنْبَغِي لِجَلَالِ وَجْهِكَ وَعَظِيمِ سُلْطَانِكَ</p><p class="latin">A'uudzu billaahi minasy-syaithaanir rajiim. Bismillaahir rahmaanir rahiim. Alhamdu lillaahi rabbil 'aalamiin, hamdan yuwaafiqu ni'amahu wa yukaafi'u maziidahu. Yaa rabbanaa lakal hamdu, wa lakasy syukru, kamaa yanbaghii lijalaali wajhika wa 'azhiimi sulthaanika.</p><p class="translation">Aku berlindung kepada Allah dari setan yang terkutuk. Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang. Segala puji bagi Allah, Tuhan semesta alam, pujian yang sebanding dengan nikmat-nikmat-Nya dan menjamin tambahannya. Wahai Tuhan kami, bagi-Mu segala puji dan bagi-Mu segala syukur, sebagaimana layak bagi keluhuran zat-Mu dan keagungan kekuasaan-Mu.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>Shalawat Nariyah / Tafrijiyah</h2><p class="arabic">اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِ سَيِّدِنَا مُحَمَّدٍ، صَلَاةً تُنَجِّينَا بِهَا مِنْ جَمِيعِ الْأَهْوَالِ وَالْآفَاتِ، وَتَقْضِي لَنَا بِهَا جَمِيعَ الْحَاجَاتِ، وَتُطَهِّرُنَا بِهَا مِنْ جَمِيعِ السَّيِّئَاتِ، وَتَرْفَعُنَا بِهَا عِنْدَكَ أَعْلَى الدَّرَجَاتِ، وَتُبَلِّغُنَا بِهَا أَقْصَى الْغَايَاتِ مِنْ جَمِيعِ الْخَيْرَاتِ فِي الْحَيَاةِ وَبَعْدَ الْمَمَاتِ، إِنَّهُ سَمِيعٌ قَرِيبٌ مُجِيبُ الدَّعَوَاتِ، وَيَا قَاضِيَ الْحَاجَاتِ</p><p class="latin">Allaahumma shalli 'alaa sayyidinaa muhammadin wa 'alaa aali sayyidinaa muhammadin, shalaatan tunajjiinaa bihaa min jamii'il ahwaali wal aafaati, wa taqdhii lanaa bihaa jamii'al haajaati, wa tuthahhirunaa bihaa min jamii'is sayyi'aati, wa tarfa'unaa bihaa 'indaka a'lad darajaati, wa tuballighunaa bihaa aqshal ghaayaati min jamii'il khairaati fil hayaati wa ba'dal mamaati, innahu samii'un qariibun mujiibud da'awaati, wa yaa qaadhiyal haajaati.</p><p class="translation">Ya Allah, limpahkanlah rahmat kepada junjungan kami Nabi Muhammad dan keluarganya, rahmat yang menyelamatkan kami dari segala ketakutan dan bencana, yang memenuhi semua kebutuhan kami, yang membersihkan kami dari segala keburukan, yang mengangkat derajat kami ke derajat tertinggi di sisi-Mu, dan yang menyampaikan kami pada tujuan maksimal dari segala kebaikan, baik semasa hidup maupun sesudah mati. Sesungguhnya Dia Maha Mendengar, Maha Dekat, lagi Maha Mengabulkan doa. Wahai Dzat yang memenuhi segala kebutuhan.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>Istighfar untuk Umat</h2><p class="arabic">اللَّهُمَّ اغْفِرْ لَنَا ذُنُوبَنَا، وَلِوَالِدَيْنَا، وَلِمَشَايِخِنَا، وَلِمُعَلِّمِينَا، وَلِمَنْ لَهُ حَقٌّ عَلَيْنَا، وَلِكَافَّةِ الْمُسْلِمِينَ أَجْمَعِينَ</p><p class="latin">Allaahummaghfir lanaa dzunuubanaa, wa liwaalidainaa, wa limasyaayikhinaa, wa limu'allimiinaa, wa liman lahu haqqun 'alainaa, wa likaaffatil muslimiina ajma'iin.</p><p class="translation">Ya Allah, ampunilah dosa-dosa kami, dosa orang tua kami, para syekh/guru kami, para pengajar kami, orang-orang yang memiliki hak atas kami, dan seluruh umat Islam secara keseluruhan.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>Doa Keselamatan Dunia & Akhirat</h2><p class="arabic">اللَّهُمَّ إِنَّا نَسْأَلُكَ سَلَامَةً فِي الدِّينِ وَالدُّنْيَا وَالْآخِرَةِ، وَعَافِيَةً فِي الْجَسَدِ، وَصِحَّةً فِي الْبَدَنِ، وَزِيَادَةً فِي الْعِلْمِ، وَبَرَكَةً فِي الرِّزْقِ، وَتَوْبَةً قَبْلَ الْمَوْتِ، وَرَحْمَةً عِنْدَ الْمَوْتِ، وَمَغْفِرَةً بَعْدَ الْمَوْتِ. اللَّهُمَّ هَوِّنْ عَلَيْنَا فِي سَكَرَاتِ الْمَوْتِ، وَالنَّجَاةَ مِنَ النَّارِ، وَالْعَفْوَ عِنْدَ الْحِسَابِ</p><p class="latin">Allaahumma innaa nas'aluka salaamatan fid diini wad dunyaa wal aakhirah, wa 'aafiyatan fil jasadi, wa shihhatan fil badani, wa ziyaadatan fil 'ilmi, wa barakatan fir rizqi, wa taubatan qablal maut, wa rahmatan 'indal maut, wa maghfiratan ba'dal maut. Allaahumma hawwin 'alainaa fii sakaraatil maut, wan najaata minan naar, wal 'afwa 'indal hisaab.</p><p class="translation">Ya Allah, sesungguhnya kami memohon kepada-Mu kesejahteraan dalam agama, dunia, dan akhirat; keafiatan jasmani; kesehatan badan; tambahan ilmu; keberkahan rezeki; taubat sebelum datangnya maut; rahmat saat datangnya maut; dan ampunan setelah datangnya maut. Ya Allah, mudahkanlah kami dalam menghadapi sakaratul maut, selamatkanlah kami dari api neraka, dan berilah ampunan pada saat hisab.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>Doa Perbaikan Urusan</h2><p class="arabic">اللَّهُمَّ أَصْلِحْ لِي دِينِي الَّذِي هُوَ عِصْمَةُ أَمْرِي، وَأَصْلِحْ لِي دُنْيَايَ الَّتِي فِيهَا مَعَاشِي، وَأَصْلِحْ لِي آخِرَتِي الَّتِي فِيهَا مَعَادِي، وَاجْعَلِ الْحَيَاةَ زِيَادَةً لِي فِي كُلِّ خَيْرٍ، وَاجْعَلِ الْمَوْتَ رَاحَةً لِي مِنْ كُلِّ شَرٍّ</p><p class="latin">Allaahumma ashlih lii diinil ladzii huwa 'ishmatu amrii, wa ashlih lii dun-yaayal latii fiihaa ma'aasyii, wa ashlih lii aakhiratil latii fiihaa ma'aadii, waj'alil hayaata ziyaadatan lii fii kulli khair, waj'alil mauta raahatan lii min kulli syarr.</p><p class="translation">Ya Allah, perbaikilah untukku agamaku yang merupakan pelindung urusanku, perbaikilah untukku duniaku yang menjadi tempat hidupku, perbaikilah untukku akhiratku yang menjadi tempat kembaliku, jadikanlah kehidupan sebagai tambahan bagiku dalam setiap kebaikan, dan jadikanlah kematian sebagai kebebasan bagiku dari segala keburukan.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>Doa Husnul Khatimah</h2><p class="arabic">اللَّهُمَّ اجْعَلْ خَيْرَ عُمُرِي آخِرَهُ، وَخَيْرَ عَمَلِي خَوَاتِمَهُ، وَخَيْرَ أَيَّامِي يَوْمَ أَلْقَاكَ فِيهِ</p><p class="latin">Allaahummaj'al khaira 'umurii aakhirahu, wa khaira 'amalii khawaatimahu, wa khaira ayyaamii yauma alqaaka fiih.</p><p class="translation">Ya Allah, jadikanlah sebaik-baik umurku di penghujungnya, sebaik-baik amalku di penutupnya, dan sebaik-baik hariku adalah hari ketika aku bertemu dengan-Mu.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>Doa Perlindungan dari Ilmu & Hati yang Buruk</h2><p class="arabic">اللَّهُمَّ إِنَّا نَعُوذُ بِكَ مِنْ عِلْمٍ لَا يَنْفَعُ، وَقَلْبٍ لَا يَخْشَعُ، وَنَفْسٍ لَا تَشْبَعُ، وَدَعْوَةٍ لَا يُسْتَجَابُ لَهَا</p><p class="latin">Allaahumma innaa na'uudzu bika min 'ilmin laa yanfa'u, wa qalbin laa yakhsya'u, wa nafsin laa tasyba'u, wa da'watin laa yustajaabu lahaa.</p><p class="translation">Ya Allah, sesungguhnya kami berlindung kepada-Mu dari ilmu yang tidak bermanfaat, hati yang tidak khusyuk, jiwa yang tidak pernah puas, dan doa yang tidak dikabulkan.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>Doa Penerimaan Amal</h2><p class="arabic">رَبَّنَا تَقَبَّلْ مِنَّا إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ، وَتُبْ عَلَيْنَا إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ</p><p class="latin">Rabbanaa taqabbal minnaa innaka antas samii'ul 'aliim, wa tub 'alainaa innaka antat tawwaabur rahiim.</p><p class="translation">Ya Tuhan kami, perkenankanlah dari kami (doa dan amal kami), sesungguhnya Engkau Maha Mendengar lagi Maha Mengetahui, dan terimalah taubat kami, sesungguhnya Engkau Maha Penerima taubat lagi Maha Penyayang.</p></div>
+                <div class="dzikir-section" tabindex="0"><h2>Doa Penutup (Rabbana Atina)</h2><p class="arabic">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً، وَفِي الْآخِرَةِ حَسَنَةً، وَقِنَا عَذَابَ النَّارِ، وَصَلَّى اللَّهُ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِهِ وَصَحْبِهِ وَسَلَّمَ، وَالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</p><p class="latin">Rabbanaa aatinaa fid dun-yaa hasanah, wa fil aakhirati hasanah, wa qinaa 'adzaaban naar. Wa shallallaahu 'alaa sayyidinaa muhammadin wa 'alaa aalihi wa shahbihi wa sallam, wal hamdu lillaahi rabbil 'aalamiin.</p><p class="translation">Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat, dan lindungilah kami dari siksa neraka. Semoga Allah memberi rahmat dan kesejahteraan kepada junjungan kami Nabi Muhammad, keluarganya, dan para sahabatnya. Segala puji bagi Allah, Tuhan semesta alam.</p></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="tv-navigation.js"></script>
+    <script>
+        history.scrollRestoration = 'manual';
+        window.addEventListener('load', () => {
+            window.scrollTo(0, 0);
+            if (document.body.classList.contains('tv-navigation')) {
+                const firstFocusable = document.querySelector('[tabindex="0"]');
+                if (firstFocusable) setTimeout(() => firstFocusable.focus(), 500);
+            }
+        });
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        function loadSavedSizes() {
+            const savedArabic = localStorage.getItem('arabicSize');
+            const savedLatin = localStorage.getItem('latinSize');
+            const savedTrans = localStorage.getItem('transSize');
+            if (savedArabic) document.documentElement.style.setProperty('--arabic-size', (parseInt(savedArabic)/10).toFixed(1)+'rem');
+            if (savedLatin) document.documentElement.style.setProperty('--latin-size', (parseInt(savedLatin)/10).toFixed(1)+'rem');
+            if (savedTrans) document.documentElement.style.setProperty('--trans-size', (parseInt(savedTrans)/10).toFixed(1)+'rem');
+        }
+        loadSavedSizes();
+
+        const menuBtn = document.getElementById('menuBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+
+        let tempArabicSize = 18, tempLatinSize = 14, tempTransSize = 12;
+
+        function updateDisplayValue(type, rawVal) {
+            document.getElementById(`${type}Value`).textContent = (rawVal/10).toFixed(1);
+        }
+
+        function updateRangeFill(range) {
+            if (!range) return;
+            const min = parseFloat(range.min), max = parseFloat(range.max), val = parseFloat(range.value);
+            range.style.background = `linear-gradient(to right, var(--secondary) 0%, var(--secondary) ${((val-min)/(max-min))*100}%, var(--light) ${((val-min)/(max-min))*100}%, var(--light) 100%)`;
+        }
+
+        function getCurrentRawSize(type) {
+            const style = getComputedStyle(document.documentElement);
+            const remVal = parseFloat(style.getPropertyValue(`--${type}-size`)) || (type==='arabic'?1.8:type==='latin'?1.4:1.2);
+            return Math.round(remVal*10);
+        }
+
+        function openSettingsModal() {
+            const cA=getCurrentRawSize('arabic'), cL=getCurrentRawSize('latin'), cT=getCurrentRawSize('trans');
+            tempArabicSize=cA; tempLatinSize=cL; tempTransSize=cT;
+            document.getElementById('arabicRange').value=cA;
+            document.getElementById('latinRange').value=cL;
+            document.getElementById('transRange').value=cT;
+            updateDisplayValue('arabic',cA); updateDisplayValue('latin',cL); updateDisplayValue('trans',cT);
+            updateRangeFill(document.getElementById('arabicRange'));
+            updateRangeFill(document.getElementById('latinRange'));
+            updateRangeFill(document.getElementById('transRange'));
+            settingsModal.classList.add('active');
+            document.body.style.overflow='hidden';
+            history.pushState({modalOpen:true},'');
+            if (window.tvNav) window.tvNav.focusModal('settingsModal');
+        }
+
+        function closeSettingsModal() {
+            settingsModal.classList.remove('active');
+            document.body.style.overflow='';
+            if(history.state&&history.state.modalOpen) history.back();
+        }
+
+        menuBtn.addEventListener('click',openSettingsModal);
+        menuBtn.addEventListener('keydown',(e)=>{if(e.keyCode===13||e.keyCode===23){e.preventDefault();openSettingsModal();}});
+        settingsModal.addEventListener('click',e=>{if(e.target===settingsModal)closeSettingsModal();});
+
+        document.getElementById('arabicRange').addEventListener('input',e=>{tempArabicSize=parseInt(e.target.value);updateDisplayValue('arabic',e.target.value);updateRangeFill(e.target);});
+        document.getElementById('latinRange').addEventListener('input',e=>{tempLatinSize=parseInt(e.target.value);updateDisplayValue('latin',e.target.value);updateRangeFill(e.target);});
+        document.getElementById('transRange').addEventListener('input',e=>{tempTransSize=parseInt(e.target.value);updateDisplayValue('trans',e.target.value);updateRangeFill(e.target);});
+
+        saveSettingsBtn.addEventListener('click',()=>{
+            document.documentElement.style.setProperty('--arabic-size',(tempArabicSize/10).toFixed(1)+'rem');
+            document.documentElement.style.setProperty('--latin-size',(tempLatinSize/10).toFixed(1)+'rem');
+            document.documentElement.style.setProperty('--trans-size',(tempTransSize/10).toFixed(1)+'rem');
+            localStorage.setItem('arabicSize',tempArabicSize);
+            localStorage.setItem('latinSize',tempLatinSize);
+            localStorage.setItem('transSize',tempTransSize);
+            closeSettingsModal();
+        });
+
+        function addSwipeToClose(modalElement,closeFunction) {
+            const content=modalElement.querySelector('.modal-content');
+            let startY=0,startX=0,currentY=0,currentX=0,isInteractiveTouch=false;
+            content.addEventListener('touchstart',e=>{
+                if(e.touches[0].target.closest('input')||e.touches[0].target.closest('button')){isInteractiveTouch=true;return;}
+                isInteractiveTouch=false;
+                startY=e.touches[0].clientY;startX=e.touches[0].clientX;
+                currentY=startY;currentX=startX;
+                content.classList.add('swiping');
+            });
+            content.addEventListener('touchmove',e=>{
+                if(isInteractiveTouch)return;
+                currentY=e.touches[0].clientY;currentX=e.touches[0].clientX;
+                const dY=currentY-startY,dX=currentX-startX;
+                if(dY>0||dX<0){content.style.transform=`translateY(${Math.max(0,dY)}px) translateX(${Math.min(0,dX)}px)`;content.style.opacity=1-(Math.max(Math.abs(dY),Math.abs(dX))/300);}
+            });
+            content.addEventListener('touchend',()=>{
+                if(isInteractiveTouch){content.classList.remove('swiping');return;}
+                const dY=currentY-startY,dX=currentX-startX;
+                if((dY>100&&Math.abs(dY)>Math.abs(dX))||(Math.abs(dX)>100&&Math.abs(dX)>Math.abs(dY)&&dX<0)){
+                    content.classList.add('closing');content.style.transform='';content.style.opacity='';
+                    setTimeout(()=>{closeFunction();content.classList.remove('swiping','closing');content.style.transform='';content.style.opacity='';},300);
+                }else{content.style.transform='';content.style.opacity='';content.classList.remove('swiping');}
+            });
+            content.addEventListener('keydown',(e)=>{
+                if(e.keyCode===8||e.keyCode===4||e.keyCode===461||e.keyCode===10009||e.keyCode===27){e.preventDefault();closeFunction();}
+            });
+        }
+        addSwipeToClose(settingsModal,closeSettingsModal);
+        window.addEventListener('popstate',()=>{if(settingsModal.classList.contains('active'))closeSettingsModal();});
+
+        setTimeout(() => { document.querySelector('.typing-text').style.borderRight = 'none'; }, 2000);
+    </script>
+    <script>
+        localStorage.setItem('lastPage', window.location.pathname.split('/').pop() || 'dzikr.html');
+    </script>
+</body>
+</html>
