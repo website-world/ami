@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/x-icon" href="logo.png">
-    <title>AMIqu</title>
+    <title>Dzikr Al Ma'tsurat AMI</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="tv-styles.css">
     <style>
@@ -372,6 +372,7 @@
         </div>
     </header>
 
+    <!-- Al Ma'tsurat Modal -->
     <div id="alMatsuratModal" class="modal">
         <div class="modal-content">
             <h2>Pilih Waktu</h2>
@@ -508,6 +509,7 @@
             });
         }
 
+        // Al Ma'tsurat Modal
         const alMatsuratModal = document.getElementById('alMatsuratModal');
         const pagiBtn = document.getElementById('pagiBtn');
         const soreBtn = document.getElementById('soreBtn');
@@ -545,6 +547,7 @@
             if (alMatsuratModal.classList.contains('active')) closeModal('alMatsuratModal');
         });
 
+        // Prayer Times
         const prayerNameEl = document.getElementById('prayerName');
         const prayerTimeEl = document.getElementById('prayerTime');
         const timeSuffixEl = document.getElementById('timeSuffix');
@@ -619,32 +622,65 @@
         }
 
         function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    pos => {
-                        lat = pos.coords.latitude;
-                        lon = pos.coords.longitude;
+            // Cek cache dulu
+            const cachedLat = localStorage.getItem('userLat');
+            const cachedLon = localStorage.getItem('userLon');
+            
+            if (cachedLat && cachedLon) {
+                lat = parseFloat(cachedLat);
+                lon = parseFloat(cachedLon);
+                fetchPrayerTimes();
+                return;
+            }
+            
+            // Fetch lokasi dari IP (tanpa izin)
+            fetchLocationByIP();
+        }
+
+        async function fetchLocationByIP() {
+            try {
+                // Gunakan IP geolocation API (gratis, tanpa API key)
+                const resp = await fetch('https://ipapi.co/json/');
+                const data = await resp.json();
+                
+                if (data.latitude && data.longitude) {
+                    lat = data.latitude;
+                    lon = data.longitude;
+                    localStorage.setItem('userLat', lat);
+                    localStorage.setItem('userLon', lon);
+                    fetchPrayerTimes();
+                } else {
+                    // Fallback ke default (Jakarta)
+                    loadDefaultPrayerTimes();
+                }
+            } catch (err) {
+                console.warn('IP geolocation failed:', err.message);
+                // Coba API alternatif
+                try {
+                    const resp2 = await fetch('https://ipinfo.io/json');
+                    const data2 = await resp2.json();
+                    if (data2.loc) {
+                        const [latStr, lonStr] = data2.loc.split(',');
+                        lat = parseFloat(latStr);
+                        lon = parseFloat(lonStr);
                         localStorage.setItem('userLat', lat);
                         localStorage.setItem('userLon', lon);
                         fetchPrayerTimes();
-                    },
-                    err => {
-                        console.warn('Geolocation denied.');
-                        const cached = localStorage.getItem('lastJadwal');
-                        if (cached) {
-                            const timings = JSON.parse(cached);
-                            const next = getNextPrayer(timings);
-                            if (next) {
-                                const [hours, minutes] = next.time.split(':').map(Number);
-                                const suffix = hours >= 12 ? 'PM' : 'AM';
-                                const displayHours = hours % 12 === 0 ? 12 : hours % 12;
-                                prayerNameEl.textContent = next.name;
-                                prayerTimeEl.innerHTML = `${String(displayHours).padStart(2,'0')}:${String(minutes).padStart(2,'0')} <span class="time-suffix">${suffix}</span>`;
-                            }
-                        }
+                    } else {
+                        loadDefaultPrayerTimes();
                     }
-                );
+                } catch (err2) {
+                    console.warn('Backup IP geolocation failed:', err2.message);
+                    loadDefaultPrayerTimes();
+                }
             }
+        }
+
+        function loadDefaultPrayerTimes() {
+            // Gunakan koordinat default (Jakarta)
+            lat = -6.2088;
+            lon = 106.8456;
+            fetchPrayerTimes();
         }
 
         getLocation();
