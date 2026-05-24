@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tv-app>
+    <info>
+        <name>Dzikr Al Ma'tsurat AMI</name>
+        <package>com.ami.dzikr.tv</package>
+        <version>1.0.1</version>
+        <versionCode>2</versionCode>
+        <minSdk>21</minSdk>
+        <targetSdk>33</targetSdk>
+    </info>
+    
+    <leanback>
+        <enabled>true</enabled>
+        <banner>@drawable/tv_banner</banner>
+        <logo>@drawable/ic_launcher</logo>
+        <title>Dzikr AMI</title>
+        <category>Lifestyle</category>
+    </leanback>
+    
+    <features>
+        <leanback>true</leanback>
+        <touchscreen>false</touchscreen>
+        <keyboard>false</keyboard>
+        <gamepad>false</gamepad>
+        <microphone>false</microphone>
+    </features>
+    
+    <display>
+        <orientation>landscape</orientation>
+        <fullscreen>true</fullscreen>
+        <resizeable>false</resizeable>
+        <overscan>false</overscan>
+    </display>
+    
+    <banner>
+        <size>320x180</size>
+        <format>PNG</format>
+        <file>tv_banner.png</file>
+    </banner>
+</tv-app>
